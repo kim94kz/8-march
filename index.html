@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>С 8 Марта, коллеги!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Montserrat:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="petals-canvas" aria-hidden="true"></canvas>
+
+    <main class="card">
+      <p class="tag">8 March Celebration</p>
+      <h1>С Международным женским днём!</h1>
+
+      <p class="lead">
+        От всей команды <strong>Казахстана</strong> и <strong>Узбекистана</strong> —
+        тёплые поздравления прекрасным коллегам из
+        <strong>Испании</strong>, <strong>Молдовы</strong>, <strong>Украины</strong> и
+        <strong>Грузии</strong>.
+      </p>
+
+      <p class="message">
+        Пусть каждый день будет наполнен вдохновением, поддержкой и радостью.
+        Спасибо за ваш профессионализм, доброту и энергию, которые объединяют нас
+        независимо от расстояний и границ!
+      </p>
+
+      <div class="flags" aria-label="Страны участников поздравления">
+        <span title="Казахстан">🇰🇿</span>
+        <span title="Узбекистан">🇺🇿</span>
+        <span class="arrow" aria-hidden="true">➜</span>
+        <span title="Испания">🇪🇸</span>
+        <span title="Молдова">🇲🇩</span>
+        <span title="Украина">🇺🇦</span>
+        <span title="Грузия">🇬🇪</span>
+      </div>
+
+      <button id="wishBtn" type="button">Подарить ещё улыбок ✨</button>
+      <p id="extraWish" class="extra-wish" aria-live="polite"></p>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
