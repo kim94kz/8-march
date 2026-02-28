@@ -1,51 +1,242 @@
+
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>С 8 Марта, коллеги!</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Montserrat:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <canvas id="petals-canvas" aria-hidden="true"></canvas>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С 8 Марта!</title>
+    <style>
+        :root {
+            --bg-1: #1f1147;
+            --bg-2: #4f2f8b;
+            --bg-3: #e1489b;
+            --card-bg: rgba(255, 255, 255, 0.14);
+            --card-stroke: rgba(255, 255, 255, 0.35);
+            --text: #fff9ff;
+            --accent: #ffe88b;
+        }
 
-    <main class="card">
-      <p class="tag">8 March Celebration</p>
-      <h1>С Международным женским днём!</h1>
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, var(--bg-3), transparent 40%),
+                        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
 
-      <p class="lead">
-        От всей команды <strong>Казахстана</strong> и <strong>Узбекистана</strong> —
-        тёплые поздравления прекрасным коллегам из
-        <strong>Испании</strong>, <strong>Молдовы</strong>, <strong>Украины</strong> и
-        <strong>Грузии</strong>.
-      </p>
+        #particles-js {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
 
-      <p class="message">
-        Пусть каждый день будет наполнен вдохновением, поддержкой и радостью.
-        Спасибо за ваш профессионализм, доброту и энергию, которые объединяют нас
-        независимо от расстояний и границ!
-      </p>
+        .container {
+            position: relative;
+            z-index: 10;
+            margin: 110px 20px 60px;
+            width: 100%;
+            max-width: 550px;
+            pointer-events: none; /* Пропускаем клики сквозь контейнер к лепесткам */
+        }
 
-      <div class="flags" aria-label="Страны участников поздравления">
-        <span title="Казахстан">🇰🇿</span>
-        <span title="Узбекистан">🇺🇿</span>
-        <span class="arrow" aria-hidden="true">➜</span>
-        <span title="Испания">🇪🇸</span>
-        <span title="Молдова">🇲🇩</span>
-        <span title="Украина">🇺🇦</span>
-        <span title="Грузия">🇬🇪</span>
-      </div>
+        .glass-card {
+            pointer-events: auto; /* Но внутри карточки клики работают */
+            background: var(--card-bg);
+            border-radius: 35px;
+            padding: 60px 40px 40px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-stroke);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
 
-      <button id="wishBtn" type="button">Подарить ещё улыбок ✨</button>
-      <p id="extraWish" class="extra-wish" aria-live="polite"></p>
-    </main>
+        /* ПЕРСОНАЖ-ЦВЕТОЧЕК */
+        .flower-hero {
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 130px;
+            z-index: 11;
+        }
 
-    <script src="script.js"></script>
-  </body>
+        .petals-container {
+            position: absolute;
+            width: 100%; height: 100%;
+            animation: rotateFlower 25s linear infinite;
+        }
+
+        .flower-petal {
+            position: absolute;
+            width: 45px; height: 75px;
+            background: linear-gradient(to bottom, #ff80ab, #ff4081);
+            border-radius: 50% 50% 45% 45%;
+            left: 42px; top: -5px;
+            transform-origin: center 70px;
+            box-shadow: inset 0 0 15px rgba(216, 27, 96, 0.3);
+        }
+
+        @keyframes rotateFlower {
+            from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+        }
+
+        .flower-face {
+            position: absolute;
+            width: 75px; height: 75px;
+            background: var(--accent);
+            border-radius: 50%;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 2;
+        }
+
+        .eyes { display: flex; gap: 14px; }
+        .eye { width: 14px; height: 14px; background: white; border-radius: 50%; position: relative; overflow: hidden; }
+        .pupil { width: 8px; height: 8px; background: #24243e; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .smile { width: 22px; height: 11px; border-bottom: 3px solid #7c4d12; border-radius: 0 0 22px 22px; margin-top: 5px; }
+
+        .badge { background: var(--accent); color: #4a2d00; padding: 5px 15px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        h2 { color: var(--accent); margin: 25px 0 10px; font-size: 2.2rem; }
+        .names { color: var(--accent); font-weight: bold; font-size: 1.2rem; margin-bottom: 25px; }
+
+        .generate-btn {
+            background: linear-gradient(90deg, #ffe88b 0%, #ffc1e3 100%);
+            color: #3e1f47; border: none; padding: 14px 30px; border-radius: 40px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 232, 139, 0.4); transition: 0.3s; margin: 20px 0;
+        }
+        .generate-btn:hover { transform: scale(1.05); }
+
+        #compliment-text { font-size: 1.2rem; min-height: 1.6em; margin: 15px 0; font-style: italic; }
+        .extra-wishes { margin: 35px 0; text-align: left; font-size: 1rem; line-height: 1.6; padding-left: 15px; border-left: 2px solid var(--accent); }
+        .sub-divider { height: 1px; width: 100%; background: linear-gradient(to right, transparent, var(--card-stroke), transparent); margin: 25px 0; }
+        .languages { font-size: 0.95rem; opacity: 0.8; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="container">
+        <div class="flower-hero">
+            <div class="petals-container" id="petals"></div>
+            <div class="flower-face">
+                <div class="eyes">
+                    <div class="eye"><div class="pupil"></div></div>
+                    <div class="eye"><div class="pupil"></div></div>
+                </div>
+                <div class="smile"></div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <!-- <span class="badge">Весна 2026</span> -->
+            <h2>С 8 Марта!</h2>
+            <div class="names">Катя, Мариям, Диана, Оксана!</div>
+            <p>Пусть эта весна будет наполнена светом и теплом. Несмотря на расстояния между нашими странами, мы ценим вашу улыбку и профессионализм каждый день!</p>
+
+            <div class="extra-wishes">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi reprehenderit magni asperiores maiores ipsum doloremque natus harum, voluptas explicabo rem quibusdam aperiam optio nostrum ad. Nulla tempora recusandae libero, doloribus..
+                <p style="font-style: italic; text-align: right; margin-top: 10px;">© Игорь</p>
+                </p>
+
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe distinctio eligendi eos pariatur ipsa obcaecati sapiente eum quibusdam libero. Natus nesciunt autem consequuntur, numquam tempore consequatur laboriosam deleniti quos, eius.</p>
+                <p style="font-style: italic; text-align: right; margin-top: 10px;">© Сардор</p>
+                </p>
+
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing, elit. Vel beatae, ex rerum, provident odit alias sint consequuntur harum recusandae possimus excepturi, ut ratione tenetur quibusdam. Minima, quia, sed? Itaque, adipisci.</p>
+                <p style="font-style: italic; text-align: right; margin-top: 10px;">© Кадыр</p>
+                </p>
+            </div>
+
+            <div id="compliment-text">Вы вдохновляете! ✨</div>
+            <button class="generate-btn" id="genBtn">🌷 Получить ещё улыбок ✨</button>
+
+            <div class="sub-divider"></div>
+            <div class="languages">
+                ¡Feliz Día de la Mujer! &nbsp;•&nbsp; Mulți Ani de 8 Martie!
+                <br>
+                З 8 Березня! &nbsp;•&nbsp; გილოცავთ 8 მარტს!
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // --- ПРАВИЛЬНЫЕ PARTICLES (МАГИЧЕСКИЕ ЛЕПЕСТКИ) ---
+        particlesJS("particles-js", {
+          "particles": {
+            "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#ffb6c1" },
+            "shape": { "type": "circle" }, // Круги при размытии выглядят как лепестки
+            "opacity": { "value": 0.5, "random": true, "anim": { "enable": true, "speed": 0.5, "opacity_min": 0.1 } },
+            "size": { "value": 10, "random": true, "anim": { "enable": false } },
+            "line_linked": { "enable": false },
+            "move": {
+              "enable": true,
+              "speed": 1, // ЗАМЕДЛИЛ СКОРОСТЬ
+              "direction": "bottom", // Падают вниз
+              "random": true,
+              "straight": false,
+              "out_mode": "out"
+            }
+          },
+          "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+              "onhover": { "enable": true, "mode": "bubble" }, // ЭФФЕКТ ПРИ НАВЕДЕНИИ
+              "onclick": { "enable": true, "mode": "repulse" }
+            },
+            "modes": {
+              "bubble": { "distance": 150, "size": 15, "duration": 2, "opacity": 0.8, "speed": 3 },
+              "repulse": { "distance": 200, "duration": 0.4 }
+            }
+          }
+        });
+
+        // Цветок-персонаж лепестки
+        const petalsCont = document.getElementById('petals');
+        for (let i = 0; i < 8; i++) {
+            const p = document.createElement('div');
+            p.className = 'flower-petal';
+            p.style.transform = `rotate(${i * 45}deg)`;
+            petalsCont.appendChild(p);
+        }
+
+        // Глазки
+        const pupils = document.querySelectorAll('.pupil');
+        window.addEventListener('mousemove', (e) => {
+            pupils.forEach(pupil => {
+                const rect = pupil.getBoundingClientRect();
+                const eyeX = rect.left + rect.width / 2;
+                const eyeY = rect.top + rect.height / 2;
+                const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
+                const dist = 4;
+                pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle)*dist}px), calc(-50% + ${Math.sin(angle)*dist}px))`;
+            });
+        });
+
+        // Комплименты
+        const phrases = ["Вы вдохновляете! ✨", "Гармонии и вдохновения! 💐", "Оставайтесь неповторимыми! 🌸", "Улыбайтесь чаще! 😊", "Яркой весны! 🌷"];
+        document.getElementById('genBtn').onclick = () => {
+            const t = document.getElementById('compliment-text');
+            t.style.opacity = 0;
+            setTimeout(() => {
+                t.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+                t.style.opacity = 1;
+            }, 200);
+        };
+    </script>
+</body>
 </html>
